@@ -6,3 +6,18 @@ Command 'pwd' executed by 127.0.0.1
 Command 'vroom rvroom' executed by 127.0.0.1
 Command 'cat jumpbpx' executed by 127.0.0.1
 Command 'cat jumpbox1.conf' executed by 127.0.0.1
+Client IP: 127.0.0.1 | Username: hi | Password: hi
+Command b'whoami' executed by 127.0.0.1
+Command b'pwd' executed by 127.0.0.1
+Client IP: 127.0.0.1 | Username: username | Password: hi
+Client IP: 127.0.0.1 | Username: username | Password: password
+Client IP: 127.0.0.1 | Username: username | Password: 
+Client IP: 127.0.0.1 | Username: username | Password: None
+Client IP: 127.0.0.1 | Username: username | Password: hi
+Client IP: 127.0.0.1 | Username: username | Password: Hi
+Client IP: 127.0.0.1 | Username: username | Password: hi
+Client IP: 127.0.0.1 | Username: username | Password: password
+Client IP: 127.0.0.1 | Username: username | Password: username
+Client IP: 127.0.0.1 | Username: hi | Password: hi
+Command b'ls' executed by 127.0.0.1
+Command b'pwd' executed by 127.0.0.1

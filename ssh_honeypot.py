@@ -9,7 +9,7 @@ from logging.handlers import RotatingFileHandler #rotates log files
 logging_format = logging.Formatter("%(message)s") #format of the log file
 SSH_BANNER = "SSH-2.0-OpenSSH_7.4" #custom banner
 
-host_key = paramiko.RSAKey(filename='server.key') #private key file
+HOST_KEY = paramiko.RSAKey(filename='server.key') #private key file
 
 #----loggers & logging files-----
 data_logger = logging.getLogger("data_logger") #captures username, password, IP
@@ -32,7 +32,7 @@ def emulated_shell(channel, client_ip):
     #loop thorugh the terminal session
     while True:
         char = channel.recv(1) #listening to user input
-        channel.send(char) #sends the user input into char
+        channel.send(b'\r\n' if char == b'\r' else char) #sends the user input into char
         if not char:
             channel.close()
 
@@ -58,10 +58,9 @@ def emulated_shell(channel, client_ip):
             else:
                 response = b"\n" + bytes(command.strip()) + b"\r\n"
 
-        
-        channel.send(response)
-        channel.send(b'corporate-jumpbox2$')
-        command = b""
+            channel.send(response)
+            channel.send(b'corporate-jumpbox2$')
+            command = b""
 
 #-----SSH Server + Sockets-----
 
@@ -79,11 +78,11 @@ class Server(paramiko.ServerInterface):
         if kind == 'session':
             return paramiko.OPEN_SUCCEEDED
 
-    def get_allowed_auths(self):
+    def get_allowed_auths(self, username):
         return "password"
     
     def check_auth_password(self, username, password):
-        funnel_logger.info(f'Client IP: {self.client_ip} attempted connection with Username: {username} | Password: {password}') #logging the username and password
+        data_logger.info(f'Client IP: {self.client_ip} attempted connection with Username: {username} | Password: {password}') #logging the username and password
         creds_logger.info(f'Client IP: {self.client_ip} | Username: {username} | Password: {password}') #logging the username and password
         if self.input_username is not None and self.input_password is not None:
             if username == self.input_username and password == self.input_password:
@@ -164,7 +163,8 @@ def honeypot(address, port, username=None, password=None):
             print(error)
             print(f"[-] Error accepting connection from {addr[0]}:{addr[1]}")
 
-honeypot('127.0.0.1', 2223, username=None, password=None) #starting the honeypot on localhost and port 2223 with username and password
+if __name__ == "__main__":
+    honeypot('127.0.0.1', 2223, username=None, password=None) #starting the honeypot on localhost and port 2223 with username and password
 
 
 

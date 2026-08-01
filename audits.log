@@ -1,1 +1,12 @@
 Client 127.0.0.1 attempted connection with username: username, password: password
+Client IP: 127.0.0.1 attempted connection with Username: hi | Password: hi
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: hi
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: password
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: 
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: None
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: hi
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: Hi
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: hi
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: password
+Client IP: 127.0.0.1 attempted connection with Username: username | Password: username
+Client IP: 127.0.0.1 attempted connection with Username: hi | Password: hi

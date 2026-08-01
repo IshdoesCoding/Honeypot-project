@@ -9,8 +9,7 @@ from logging.handlers import RotatingFileHandler #rotates log files
 logging_format = logging.Formatter("%(message)s") #format of the log file
 SSH_BANNER = "SSH-2.0-OpenSSH_7.4" #custom banner
 
-host_key = 'server.key' #private key file
-HOST_KEY = paramiko.RSAKey.from_private_key_file(host_key) #loaded private key object
+host_key = paramiko.RSAKey(filename='server.key') #private key file
 
 #----loggers & logging files-----
 data_logger = logging.getLogger("data_logger") #captures username, password, IP
@@ -33,7 +32,7 @@ def emulated_shell(channel, client_ip):
     #loop thorugh the terminal session
     while True:
         char = channel.recv(1) #listening to user input
-        channel.send(b'\r\n' if char == b'\r' else char) #sends the user input into char
+        channel.send(char) #sends the user input into char
         if not char:
             channel.close()
 
@@ -46,19 +45,23 @@ def emulated_shell(channel, client_ip):
                 channel.close()
             elif command.strip() == b'pwd':
                 response = b'\\usr\\local' + b'\r\n'
+                creds_logger.info(f'Command {command.strip()} executed by {client_ip}') #logging the command executed
             elif command.strip() == b'whoami':
                 response = b'usr\r\n'
+                creds_logger.info(f'Command {command.strip()} executed by {client_ip}')
             elif command.strip() == b'ls':
-                response = b"jumpbox1.conf" + b"\r\n"
+                response = b'jumpbox1.conf\r\n'
+                creds_logger.info(f'Command {command.strip()} executed by {client_ip}')
             elif command.strip() == b'cat jumpbox1.conf':
-                response = b'\n' + b"Go to ishy.com" + b"\r\n" 
+                response = b'\n' + b"Go to ishy.com" + b"\r\n"
+                creds_logger.info(f'Command {command.strip()} executed by {client_ip}')
             else:
                 response = b"\n" + bytes(command.strip()) + b"\r\n"
 
-            channel.send(response)
-            channel.send(b'corporate-jumpbox2$')
-            creds_logger.info(f"Command '{command.strip().decode(errors='replace')}' executed by {client_ip}")
-            command = b""
+        
+        channel.send(response)
+        channel.send(b'corporate-jumpbox2$')
+        command = b""
 
 #-----SSH Server + Sockets-----
 
@@ -76,11 +79,12 @@ class Server(paramiko.ServerInterface):
         if kind == 'session':
             return paramiko.OPEN_SUCCEEDED
 
-    def get_allowed_auths(self, username):
+    def get_allowed_auths(self):
         return "password"
     
     def check_auth_password(self, username, password):
-        data_logger.info(f"Client {self.client_ip} attempted connection with username: {username}, password: {password}")
+        funnel_logger.info(f'Client IP: {self.client_ip} attempted connection with Username: {username} | Password: {password}') #logging the username and password
+        creds_logger.info(f'Client IP: {self.client_ip} | Username: {username} | Password: {password}') #logging the username and password
         if self.input_username is not None and self.input_password is not None:
             if username == self.input_username and password == self.input_password:
                 return paramiko.AUTH_SUCCESSFUL # if username is username and password is password then success and logged into shell env
@@ -160,7 +164,7 @@ def honeypot(address, port, username=None, password=None):
             print(error)
             print(f"[-] Error accepting connection from {addr[0]}:{addr[1]}")
 
-honeypot('127.0.0.1', 2223, username='username', password='password') #starting the honeypot on localhost and port 2223 with username and password
+honeypot('127.0.0.1', 2223, username=None, password=None) #starting the honeypot on localhost and port 2223 with username and password
 
 
 

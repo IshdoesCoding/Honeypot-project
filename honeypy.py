@@ -2,6 +2,9 @@
 import argparse
 import sys #parsing command line arguments
 from ssh_honeypot import * #importing the honeypot function from the module
+from web_honeypot import * #importing the web_honeypot function from the module
+
+
 # Parse Arguments
 
 if __name__ == "__main__":
@@ -22,14 +25,30 @@ if __name__ == "__main__":
         if args.ssh:
             print("[*] Starting SSH Honeypot...")
             honeypot(args.address, args.port, args.username, args.password)
+
+            if not args.username:
+                username = None
+            if not args.password:
+                password = None
+
         elif args.http:
             print("[*] Starting HTTP Honeypot...")
-            pass
+            if not args.username:
+                args.username = "admin"
+            if not args.password:
+                args.password = "password"
+
+            print(f" Port: {args.port}, Username: {args.username}, Password: {args.password}")
+            run_web_honeypot(port=args.port, input_username=args.username, input_password=args.password)
+            
         else:
-            print("error: Please specify a honeypot type (SSH or HTTP) using -s or -w flags.")
+            print("error: Please specify a honeypot type (SSH or HTTP) using -s or -w flags.")  
     except KeyboardInterrupt:
         print("\n[*] Shutting down honeypot...")
         sys.exit(0)
+    
+    
+
             
             
 

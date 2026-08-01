@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WordPress &rsaquo; Log In</title>
+  <!-- basic styling to look like a real wp-login page -->
+  <style>
+    body {
+      background: #f1f1f1;
+      font-family: -apple-system, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    #login {
+      width: 320px;
+      text-align: center;
+    }
+
+    #login h1 {
+      font-size: 24px;
+      color: #3c434a;
+      margin-bottom: 20px;
+    }
+
+    .login-box {
+      background: #fff;
+      padding: 26px 24px;
+      border: 1px solid #c3c4c7;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #1d2327;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 6px 8px;
+      margin-bottom: 16px;
+      border: 1px solid #8c8f94;
+      border-radius: 3px;
+      box-sizing: border-box;
+    }
+
+    .submit-btn {
+      background: #2271b1;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .submit-btn:hover {
+      background: #135e96;
+    }
+
+    #message {
+      margin-top: 14px;
+      font-size: 14px;
+      color: #d63638;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="login">
+    <h1>WordPress</h1>
+
+    <div class="login-box">
+      <!-- login form posts straight to the honeypot's login route -->
+      <form action="/wp-admin-login" method="POST">
+        <label for="username">Username or Email Address</label>
+        <input type="text" id="username" name="username" required autofocus>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" class="submit-btn">Log In</button>
+      </form>
+
+      <!-- shows whatever the server sent back (e.g. invalid credentials) -->
+      <div id="message">{{ message }}</div>
+    </div>
+  </div>
+
+</body>
+</html>

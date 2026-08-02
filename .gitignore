@@ -1,0 +1,4 @@
+server.key
+*.key
+!server.key.pub
+.venv/
